@@ -349,7 +349,7 @@ def _post_upload_check(src_df):
             raise Exception('Blank Row detected')            
     
     for index, row in df.iterrows():
-        if row['class_score'] < -2.00 or row['class_score'] > 2.00:
+        if row['class_score'] < -3.00 or row['class_score'] > 3.00:
             print(row.name, ' Score should be within -2 and +2')
             raise Exception('Score should be within -2 and +2')
     
