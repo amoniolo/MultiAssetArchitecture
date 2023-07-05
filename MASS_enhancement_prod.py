@@ -16,13 +16,13 @@ import IPython.display as ipd
 
 
 def _scorecard (score):
-    if -2.00 <= score < -1.25: score = 0
-    elif -1.25 <= score < -0.75: score = 1
-    elif -0.75 <= score < -0.25: score = 2
-    elif -0.25 <= score <= 0.25: score = 3
-    elif 0.25 < score <= 0.75: score = 4
-    elif 0.75 < score <= 1.25: score = 5
-    elif 1.25 < score <= 2.00: score = 6    
+    if -3.00 <= score < -2.25: score = 0
+    elif -2.25 <= score < -1.13: score = 1
+    elif -1.13 <= score < -0.38: score = 2
+    elif -0.38 <= score <= 0.38: score = 3
+    elif 0.38 < score <= 1.13: score = 4
+    elif 1.13 < score <= 2.25: score = 5
+    elif 2.25 < score <= 3.00: score = 6    
     else: score = 7
     switcher = {
         0: [-3, 'UW_Max'],
