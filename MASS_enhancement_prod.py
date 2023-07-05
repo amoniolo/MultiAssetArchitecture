@@ -821,7 +821,7 @@ def _init_MASS():
     display(file_upload)
     
 def _init_MASS_direct(data_file):
-    input_data = data_file
+    input_data = pd.read_csv(data_file)
     ui, weight_dict, score_dict, u_rng_dict, l_rng_dict, prio_dict = _init_UI(input_data)
     display(ui)
     
