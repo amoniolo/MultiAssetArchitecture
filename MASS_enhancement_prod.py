@@ -85,7 +85,7 @@ def _un_wgt(rnd):
     return feature
 
 
-# In[70]:
+# In[84]:
 
 
 def _available_gap(feature,rnd):
@@ -170,7 +170,7 @@ def tier_dict(dct,num_range):
     return order_dict
 
 
-# In[81]:
+# In[83]:
 
 
 def sec_level_wgt(rnd,dct,num_range,bucket,gap_bucket): 
@@ -208,7 +208,7 @@ def sec_level_wgt(rnd,dct,num_range,bucket,gap_bucket):
                 np.seterr('ignore')
                 sec_level_alloc = base_alloc - sec_level_increment
                 
-                print(base_alloc,check_gap,sec_level_gap,gap_bucket[gb_index])
+                #print(base_alloc,check_gap,sec_level_gap,gap_bucket[gb_index])
                 
                 v[-1] = sec_level_alloc
         
@@ -825,7 +825,6 @@ def _init_MASS_direct(data_file):
     ui, weight_dict, score_dict, u_rng_dict, l_rng_dict, prio_dict = _init_UI(input_data)
     display(ui)
     
-
 
 
 
