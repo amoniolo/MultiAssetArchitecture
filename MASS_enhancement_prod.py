@@ -85,7 +85,7 @@ def _un_wgt(rnd):
     return feature
 
 
-# In[4]:
+# In[70]:
 
 
 def _available_gap(feature,rnd):
@@ -139,7 +139,7 @@ def _available_gap(feature,rnd):
         
     bucket = np.array(list(wgt_bal.values()))
     gap_bucket = np.array(list(gap.values()))
-
+    
     return bucket, gap_bucket
 
 
@@ -170,7 +170,7 @@ def tier_dict(dct,num_range):
     return order_dict
 
 
-# In[6]:
+# In[81]:
 
 
 def sec_level_wgt(rnd,dct,num_range,bucket,gap_bucket): 
@@ -204,9 +204,11 @@ def sec_level_wgt(rnd,dct,num_range,bucket,gap_bucket):
                 base_alloc = dct_copy[tier][k][-1]
                 
                 sec_level_gap = v[5] - v[3]
-                sec_level_increment = (check_gap * (sec_level_gap/gap_bucket[gb_index]))
+                sec_level_increment = (check_gap * (base_alloc/bucket[gb_index])) #(sec_level_gap/gap_bucket[gb_index]))
                 np.seterr('ignore')
                 sec_level_alloc = base_alloc - sec_level_increment
+                
+                print(base_alloc,check_gap,sec_level_gap,gap_bucket[gb_index])
                 
                 v[-1] = sec_level_alloc
         
@@ -252,7 +254,7 @@ def sec_level_wgt(rnd,dct,num_range,bucket,gap_bucket):
                 base_alloc = dct_copy[tier][k][-1]
     
                 sec_level_gap = v[2] - v[5]
-                sec_level_increment = (check_gap * (sec_level_gap/gap_bucket[gb_index]))
+                sec_level_increment = (check_gap * (base_alloc/bucket[gb_index])) #(sec_level_gap/gap_bucket[gb_index]))
                 np.seterr('ignore')
                 sec_level_alloc = base_alloc + sec_level_increment
                 
@@ -318,7 +320,7 @@ def sec_level_wgt(rnd,dct,num_range,bucket,gap_bucket):
         return dct
 
 
-# In[7]:
+# In[60]:
 
 
 def _post_upload_check(src_df):
@@ -496,11 +498,13 @@ def _final_assertion(dct,cash,cash_lrng,cash_urng):
     
     else: print('All rebalance conditions met')
 
-    print('Initial Total Unrestrained Weight: ',(checks[-2]*100).round(4))
-    print('Total Final Weight: ',(checks[-1]*100).round(4))
+    print('Initial Total Unrestrained Weight (Ex Cash): ',(checks[-2]*100).round(4))
+    print('Total Final Weight (Ex Cash): ',(checks[-1]*100).round(4))
     print('Cash SAA: ',(cash[0]*100).round(4))
     print('Cash Max: ',(cash[2]*100).round(4))
     print('Cash Min: ',(cash[3]*100).round(4))
+    
+    #print(checks)
     
     return None
 
@@ -527,10 +531,10 @@ def _viz_output(df):
     
     viz_df = df.reindex(columns=format_titles)
     
-    return viz_df
+    return viz_df.round(2)
 
 
-# In[8]:
+# In[61]:
 
 
 def _MASS_algo(rnd,upload_file):
@@ -553,6 +557,20 @@ def _MASS_algo(rnd,upload_file):
     viz_df = _viz_output(clean_output)
     viz_df['sector'] = sec_df
     viz_df.sort_values(['sector','Tier Bucket'],inplace=True)
+    
+    final_cash = (100 - viz_df['Final Asset %'].sum()).round(2)
+    
+    cash_append = np.array([cash_saa*100,' ',cash_urng*100,cash_lrng*100,' ','',final_cash,' ','Cash'])
+    cash_df = pd.DataFrame(cash_append,columns=['CASH'],index = ['Strategic Asset %',
+                                                          'Score Category',
+                                                          'Max Tactical %',
+                                                          'Min Tactical %',
+                                                          'Tier Bucket',
+                                                          'Unrestrained %',
+                                                          'Final Asset %',
+                                                          'delta',
+                                                          'sector']).transpose()
+    viz_df = pd.concat([viz_df,cash_df],axis=0)
     
     _final_assertion(final_order_dict,cash,cash_lrng,cash_urng)
     
@@ -785,7 +803,7 @@ def _init_UI (src):
     return container, weight_dict, score_dict, u_rng_dict, l_rng_dict, prio_dict
 
 
-# In[59]:
+# In[65]:
 
 
 def _init_MASS():
@@ -802,31 +820,11 @@ def _init_MASS():
     file_upload.observe(file_upload_handler, names='value')
     display(file_upload)
     
-
-
-# In[68]:
-
-
 def _init_MASS_direct(data_file):
-    input_data = pd.read_csv(data_file)
+    input_data = data_file
     ui, weight_dict, score_dict, u_rng_dict, l_rng_dict, prio_dict = _init_UI(input_data)
     display(ui)
-
-
-# In[72]:
-
-
-#data_file = open('test_src.csv')
-#_init_MASS_direct(data_file)
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
+    
 
 
 
